@@ -168,11 +168,12 @@ resource "null_resource" "remote_exec_from_github" {
   provisioner "remote-exec" {
     inline = [
       "sudo yum update -y",
-      "sudo yum install docker -y",
+      "sudo yum install docker git -y",
       "sudo service docker start",
       "sudo curl -L https://github.com/docker/compose/releases/download/1.29.1/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose",
       "sudo chmod +x /usr/local/bin/docker-compose",
       "sudo usermod -a -G docker ec2-user",
+
       "git clone https://github.com/tuan-phan/DevOps_Pratice.git",
       "cd DevOps_Pratice",
       "docker-compose build",
