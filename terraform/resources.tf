@@ -165,11 +165,6 @@ resource "null_resource" "remote_exec_from_github" {
     private_key = var.AWS_SECRET_PRIVATE_KEY
   }
 
-  provisioner "file" {
-    source = "/home/runner/work/DevOps_Pratice/DevOps_Pratice"
-    destination = "/home/ec2-user/"
-  }
-
   provisioner "remote-exec" {
     inline = [
       "sudo yum update -y",
@@ -178,8 +173,8 @@ resource "null_resource" "remote_exec_from_github" {
       "sudo curl -L https://github.com/docker/compose/releases/download/1.29.1/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose",
       "sudo chmod +x /usr/local/bin/docker-compose",
       "sudo usermod -a -G docker ec2-user",
-      "ls /home/ec2-user/",
-      "cd /home/ec2-user/workspace",
+      "git clone https://github.com/tuan-phan/DevOps_Pratice.git ./",
+      "cd DevOps_Pratice",
       "docker-compose build",
       "docker-compose up -d --force-recreate",
     ]
