@@ -2,7 +2,7 @@
 # VARIABLES
 ##################################################################################
 
-variable "AWS_SECRET_PRIVATE_KEY" {}
+# variable "AWS_SECRET_PRIVATE_KEY" {}
 variable "key_name" {}
 
 variable "environment" {}
