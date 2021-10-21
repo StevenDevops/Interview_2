@@ -166,7 +166,7 @@ resource "null_resource" "remote_exec_from_github" {
   }
 
   provisioner "file" {
-    source = "../../recipes"
+    source = "../recipes"
     destination = "/home/ec2-user/"
   }
 
