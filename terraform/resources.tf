@@ -163,7 +163,7 @@ resource "null_resource" "remote_exec_from_github" {
     type        = "ssh"
     host        = "${aws_instance.flask[count.index].public_ip}"
     user        = "ec2-user"
-    private_key = var.private_key
+    private_key = var.AWS_SECRET_PRIVATE_KEY
   }
 
   provisioner "file" {

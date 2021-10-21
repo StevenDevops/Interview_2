@@ -6,21 +6,42 @@ on:
     - testing
 
 jobs:
-  validate:
-    name: Validate
+  apply:
+    name: terraform apply
     runs-on: ubuntu-latest
     steps:
-      - name: Check out code
-        uses: actions/checkout@v1
-
-      - name: Run a Terraform init
-        uses: docker://hashicorp/terraform:1.0.9
+      - name: Checkout
+        uses: actions/checkout@v1.0.0
+      - name: terraform init
+        uses: hashicorp/terraform-github-actions@master
         with:
-          entrypoint: terraform
-          args: -chdir=./terraform init
-
-      - name: Run a Terraform validate
-        uses: docker://hashicorp/terraform:1.0.9
+          tf_actions_version: 1.0.9
+          tf_actions_subcommand: 'init'
+          tf_actions_working_dir: './terraform'
+          tf_actions_comment: true
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_SECRET_PRIVATE_KEY: ${{ secrets.AWS_SECRET_PRIVATE_KEY }}
+      - name: terraform workspace new Development
+        uses: hashicorp/terraform-github-actions@master
         with:
-          entrypoint: terraform
-          args: -chdir=./terraform validate
+          tf_actions_version: 1.0.9
+          tf_actions_subcommand: 'workspace new Development'
+          tf_actions_working_dir: './terraform'
+          tf_actions_comment: true
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_SECRET_PRIVATE_KEY: ${{ secrets.AWS_SECRET_PRIVATE_KEY }}
+      - name: terraform plan
+        uses: hashicorp/terraform-github-actions@master
+        with:
+          tf_actions_version: 1.0.9
+          tf_actions_subcommand: 'plan'
+          tf_actions_working_dir: './terraform'
+          tf_actions_comment: true
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_SECRET_PRIVATE_KEY: ${{ secrets.AWS_SECRET_PRIVATE_KEY }}

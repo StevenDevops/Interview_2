@@ -2,7 +2,7 @@
 # VARIABLES
 ##################################################################################
 
-variable "private_key" {}
+variable "AWS_SECRET_PRIVATE_KEY" {}
 variable "key_name" {}
 
 variable "aws_region" {
