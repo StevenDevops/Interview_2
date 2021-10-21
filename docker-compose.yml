@@ -1,0 +1,30 @@
+version: '3.6'
+
+services:
+  api:
+    build: .
+    depends_on:
+      - postgres
+    environment:
+      SECRET_KEY: "steven#testing"
+      FLASK_CONFIG: "development"
+      DATABASE_URL: "postgres://steven:12345@postgres/recipe_db"
+    networks:
+      - default
+    ports:
+      - 5000:5000
+    restart: always
+
+  postgres:
+    environment:
+      POSTGRES_USER: steven
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: recipe_db
+    image: postgres:10.1
+    networks:
+      - default
+    ports:
+      - 5432:5432
+    restart: always
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
