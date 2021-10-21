@@ -3,8 +3,8 @@ name: Terraform CI
 on:
   push:
     branches:
-    - testing
-
+    - master
+  workflow_dispatch:
 jobs:
   run-terraform:
     name: Run terraform
