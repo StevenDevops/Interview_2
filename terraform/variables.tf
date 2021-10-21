@@ -5,6 +5,8 @@
 variable "AWS_SECRET_PRIVATE_KEY" {}
 variable "key_name" {}
 
+variable "environment" {}
+
 variable "aws_region" {
   default = "ap-northeast-1"
 }
@@ -37,7 +39,7 @@ variable "bucket_name_prefix" {}
 ##################################################################################
 
 locals {
-  env_name = lower(terraform.workspace)
+  env_name = var.environment
 
   common_tags = {
     BillingCode = var.billing_code_tag

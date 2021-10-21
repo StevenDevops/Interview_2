@@ -3,7 +3,6 @@
 ##################################################################################
 
 provider "aws" {
-  profile = var.aws_profile
   region  = var.aws_region
 }
 
@@ -34,12 +33,12 @@ data "aws_ami" "aws-linux" {
 }
 
 data "template_file" "public_cidrsubnet" {
-  count = var.subnet_count[terraform.workspace]
+  count = var.subnet_count[local.env_name]
 
   template = "$${cidrsubnet(vpc_cidr,8,current_count)}"
 
   vars = {
-    vpc_cidr      = var.network_address_space[terraform.workspace]
+    vpc_cidr      = var.network_address_space[local.env_name]
     current_count = count.index
   }
 }
@@ -61,7 +60,7 @@ module "vpc" {
   name   = "${local.env_name}-vpc"
   version = "2.15.0"
 
-  cidr            = var.network_address_space[terraform.workspace]
+  cidr            = var.network_address_space[local.env_name]
   azs             = [data.aws_availability_zones.available.names[0], data.aws_availability_zones.available.names[1]]
   public_subnets  = data.template_file.public_cidrsubnet[*].rendered
   private_subnets = []
@@ -111,7 +110,7 @@ resource "aws_security_group" "flask-sg" {
     from_port   = 5000
     to_port     = 5000
     protocol    = "tcp"
-    cidr_blocks = [var.network_address_space[terraform.workspace]]
+    cidr_blocks = [var.network_address_space[local.env_name]]
   }
 
   # outbound internet access
@@ -147,10 +146,10 @@ resource "aws_elb" "web" {
 
 # INSTANCES #
 resource "aws_instance" "flask" {
-  count                  = var.instance_count[terraform.workspace]
+  count                  = var.instance_count[local.env_name]
   ami                    = data.aws_ami.aws-linux.id
-  instance_type          = var.instance_size[terraform.workspace]
-  subnet_id              = module.vpc.public_subnets[count.index % var.subnet_count[terraform.workspace]]
+  instance_type          = var.instance_size[local.env_name]
+  subnet_id              = module.vpc.public_subnets[count.index % var.subnet_count[local.env_name]]
   vpc_security_group_ids = [aws_security_group.flask-sg.id]
   key_name               = var.key_name
   tags                   = merge(local.common_tags, { Name = "${local.env_name}-flask-vnsos" })
@@ -158,7 +157,7 @@ resource "aws_instance" "flask" {
 }
 
 resource "null_resource" "remote_exec_from_github" {
-  count = var.instance_count[terraform.workspace]
+  count = var.instance_count[local.env_name]
   connection {
     type        = "ssh"
     host        = "${aws_instance.flask[count.index].public_ip}"
