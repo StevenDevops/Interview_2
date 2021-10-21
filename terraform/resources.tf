@@ -152,7 +152,7 @@ resource "aws_instance" "flask" {
   subnet_id              = module.vpc.public_subnets[count.index % var.subnet_count[local.env_name]]
   vpc_security_group_ids = [aws_security_group.flask-sg.id]
   key_name               = var.key_name
-  tags                   = merge(local.common_tags, { Name = "${local.env_name}-flask-vnsos" })
+  tags                   = merge(local.common_tags, { Name = "${local.env_name}-flask-devops" })
 
 }
 
@@ -166,7 +166,7 @@ resource "null_resource" "remote_exec_from_github" {
   }
 
   provisioner "file" {
-    source = "../workspace"
+    source = "/github/workspace"
     destination = "/home/ec2-user/"
   }
 
