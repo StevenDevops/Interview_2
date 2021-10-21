@@ -166,7 +166,7 @@ resource "null_resource" "remote_exec_from_github" {
   }
 
   provisioner "file" {
-    source = "/github/workspace/"
+    source = "/home/runner/work/DevOps_Pratice/DevOps_Pratice"
     destination = "/home/ec2-user/"
   }
 
