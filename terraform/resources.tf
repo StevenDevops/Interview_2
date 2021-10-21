@@ -165,10 +165,10 @@ resource "null_resource" "remote_exec_from_github" {
     private_key = var.AWS_SECRET_PRIVATE_KEY
   }
 
-  provisioner "file" {
-    source = "/github/workspace"
-    destination = "/home/ec2-user/"
-  }
+#  provisioner "file" {
+#    source = "/github/workspace"
+#    destination = "/home/ec2-user/"
+#  }
 
   provisioner "remote-exec" {
     inline = [
