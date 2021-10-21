@@ -31,7 +31,6 @@ variable "instance_count" {
 }
 
 variable "billing_code_tag" {}
-variable "bucket_name_prefix" {}
 
 
 ##################################################################################
@@ -45,7 +44,5 @@ locals {
     BillingCode = var.billing_code_tag
     Environment = local.env_name
   }
-
-  s3_bucket_name = "${var.bucket_name_prefix}-${local.env_name}-${random_integer.rand.result}"
 
 }
