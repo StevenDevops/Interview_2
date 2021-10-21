@@ -175,7 +175,7 @@ resource "null_resource" "remote_exec_from_github" {
       "sudo usermod -a -G docker ec2-user",
       "git clone https://github.com/tuan-phan/DevOps_Pratice.git",
       "cd DevOps_Pratice",
-      "docker-compose -v"
+      "docker-compose -v",
       "docker-compose build",
       "docker-compose up -d --force-recreate",
     ]
