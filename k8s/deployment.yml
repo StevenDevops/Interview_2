@@ -125,5 +125,5 @@ spec:
           do echo waiting for database; sleep 2; done;']
       containers:
         - name: "flask"
-          image: "flask-test"
-          imagePullPolicy: IfNotPresent
+          image: "864185773574.dkr.ecr.ap-northeast-1.amazonaws.com/flask_app"
+          imagePullPolicy: Always
