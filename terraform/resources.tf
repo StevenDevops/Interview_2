@@ -6,7 +6,7 @@ terraform {
     organization = "Cobblestone_DevOps"
 
     workspaces {
-      name = "<THIS WILL BE REPLACED VIA -backend-config>"
+      prefix = "flask-app-"
     }
   }
 }
@@ -45,12 +45,12 @@ data "aws_ami" "aws-linux" {
 }
 
 data "template_file" "public_cidrsubnet" {
-  count = var.subnet_count[terraform.workspace]
+  count = var.subnet_count[var.environment]
 
   template = "$${cidrsubnet(vpc_cidr,8,current_count)}"
 
   vars = {
-    vpc_cidr      = var.network_address_space[terraform.workspace]
+    vpc_cidr      = var.network_address_space[var.environment]
     current_count = count.index
   }
 }
@@ -62,10 +62,10 @@ data "template_file" "public_cidrsubnet" {
 # NETWORKING #
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
-  name   = "${terraform.workspace}-vpc"
+  name   = "${var.environment}-vpc"
   version = "2.15.0"
 
-  cidr            = var.network_address_space[terraform.workspace]
+  cidr            = var.network_address_space[var.environment]
   azs             = [data.aws_availability_zones.available.names[0], data.aws_availability_zones.available.names[1]]
   public_subnets  = data.template_file.public_cidrsubnet[*].rendered
   private_subnets = []
@@ -93,7 +93,7 @@ resource "aws_security_group" "elb-sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = merge(local.common_tags, { Name = "${terraform.workspace}-elb-sg" })
+  tags = merge(local.common_tags, { Name = "${var.environment}-elb-sg" })
 
 }
 
@@ -115,7 +115,7 @@ resource "aws_security_group" "flask-sg" {
     from_port   = 5000
     to_port     = 5000
     protocol    = "tcp"
-    cidr_blocks = [var.network_address_space[terraform.workspace]]
+    cidr_blocks = [var.network_address_space[var.environment]]
   }
 
   # outbound internet access
@@ -126,13 +126,13 @@ resource "aws_security_group" "flask-sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = merge(local.common_tags, { Name = "${terraform.workspace}-flask-sg" })
+  tags = merge(local.common_tags, { Name = "${var.environment}-flask-sg" })
 
 }
 
 # LOAD BALANCER #
 resource "aws_elb" "web" {
-  name = "${terraform.workspace}-flask-elb"
+  name = "${var.environment}-flask-elb"
 
   subnets         = module.vpc.public_subnets
   security_groups = [aws_security_group.elb-sg.id]
@@ -145,24 +145,24 @@ resource "aws_elb" "web" {
     lb_protocol       = "tcp"
   }
 
-  tags = merge(local.common_tags, { Name = "${terraform.workspace}-elb" })
+  tags = merge(local.common_tags, { Name = "${var.environment}-elb" })
 
 }
 
 # INSTANCES #
 resource "aws_instance" "flask" {
-  count                  = var.instance_count[terraform.workspace]
+  count                  = var.instance_count[var.environment]
   ami                    = data.aws_ami.aws-linux.id
-  instance_type          = var.instance_size[terraform.workspace]
-  subnet_id              = module.vpc.public_subnets[count.index % var.subnet_count[terraform.workspace]]
+  instance_type          = var.instance_size[var.environment]
+  subnet_id              = module.vpc.public_subnets[count.index % var.subnet_count[var.environment]]
   vpc_security_group_ids = [aws_security_group.flask-sg.id]
   key_name               = var.key_name
-  tags                   = merge(local.common_tags, { Name = "${terraform.workspace}-flask-devops" })
+  tags                   = merge(local.common_tags, { Name = "${var.environment}-flask-devops" })
 
 }
 
 resource "null_resource" "remote_exec_from_github" {
-  count = var.instance_count[terraform.workspace]
+  count = var.instance_count[var.environment]
   connection {
     type        = "ssh"
     host        = "${aws_instance.flask[count.index].public_ip}"
