@@ -6,7 +6,7 @@ terraform {
     organization = "Cobblestone_DevOps"
 
     workspaces {
-      name = "testing"
+      name = "var.environment"
     }
   }
 }
@@ -58,13 +58,6 @@ data "template_file" "public_cidrsubnet" {
 ##################################################################################
 # RESOURCES
 ##################################################################################
-
-#Random ID
-resource "random_integer" "rand" {
-  min = 10000
-  max = 99999
-}
-
 
 # NETWORKING #
 module "vpc" {
