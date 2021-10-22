@@ -1,4 +1,4 @@
-name: 'Terraform Cloud'
+name: 'Terraform Cloud EKS'
 
 on:
   workflow_dispatch:
