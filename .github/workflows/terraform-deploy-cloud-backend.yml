@@ -1,4 +1,4 @@
-name: 'Terraform Cloud Deploy (Deploy the application to clean EC2 instances'
+name: 'Terraform Cloud Deploy (Deploy the application to clean EC2 instances)'
 
 on:
   workflow_dispatch:
@@ -6,6 +6,7 @@ on:
       environment:
         description: 'The environment to be deployed (env name, ex: dev)'
         required: true
+
 jobs:
   terraform:
     name: 'Terraform'
