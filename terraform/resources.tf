@@ -6,7 +6,7 @@ terraform {
     organization = "Cobblestone_DevOps"
 
     workspaces {
-      name = "${terraform.workspace}"
+      name = "<THIS WILL BE REPLACED VIA -backend-config>"
     }
   }
 }
