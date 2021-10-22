@@ -38,11 +38,8 @@ variable "billing_code_tag" {}
 ##################################################################################
 
 locals {
-  env_name = var.environment
-
   common_tags = {
     BillingCode = var.billing_code_tag
-    Environment = local.env_name
+    Environment = var.environment
   }
-
 }

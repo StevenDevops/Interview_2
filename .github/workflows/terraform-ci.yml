@@ -46,12 +46,14 @@ name: 'Terraform'
 
 on:
   workflow_dispatch:
-
+    environment:
+      description: 'The environment to be deployed (env name, ex: dev)'
+      required: true
 jobs:
   terraform:
     name: 'Terraform'
     runs-on: ubuntu-latest
-    environment: dev
+    environment: ${{ github.event.inputs.environment  }}
 
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
     defaults:
