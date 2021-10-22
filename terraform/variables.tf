@@ -40,6 +40,6 @@ variable "billing_code_tag" {}
 locals {
   common_tags = {
     BillingCode = var.billing_code_tag
-    Environment = terraform.workspace
+    Environment = var.environment
   }
 }
