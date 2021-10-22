@@ -21,23 +21,19 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build, tag, and push image to Amazon ECR
+      - name: deploy to cluster
+        uses: kodermax/kubectl-aws-eks@master
         env:
+          KUBE_CONFIG_DATA: ${{ secrets.AWS_EKS_CONFIG }}
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: flask_app
           IMAGE_TAG: latest
-        run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-
-      - name: Push to k8s
-        uses: steebchen/kubectl@v2.0.0
         with:
-          config: ${{ secrets.AWS_EKS_CONFIG }}
-          command: apply -f ./k8s/deployment.yaml
+          args: set image deployment/$ECR_REPOSITORY $ECR_REPOSITORY=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
-      - name: Rollout K8s deployment
-        uses: steebchen/kubectl@v2.0.0
+      - name: verify deployment
+        uses: kodermax/kubectl-aws-eks@master
+        env:
+          KUBE_CONFIG_DATA: ${{ secrets.AWS_EKS_CONFIG }}
         with:
-          config: ${{ secrets.AWS_EKS_CONFIG }}
-          command: rollout restart deployment flask
+          args: rollout status deployment/my-app
