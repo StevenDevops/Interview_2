@@ -43,7 +43,7 @@ jobs:
         env:
           TF_WORKSPACE: ${{ github.event.inputs.environment  }}        
 
-      # Terraform apply
+      # Run terraform apply
        - name: Terraform Apply
         run: terraform apply -auto-approve
         env:
