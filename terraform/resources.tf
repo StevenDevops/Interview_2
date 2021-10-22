@@ -6,7 +6,7 @@ terraform {
     organization = "Cobblestone_DevOps"
 
     workspaces {
-      prefix = ""
+      prefix = "flask-app-"
     }
   }
 }
