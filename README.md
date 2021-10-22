@@ -43,3 +43,4 @@ Clone from:
    * Debugger PIN: 331-522-421
   172.18.0.1 - - [20/Oct/2021 11:39:19] "POST /api/v1/auth/register/ HTTP/1.1" 201 -
   ```
+For part 2 and 3 please read the document on https://docs.google.com/document/d/18dVfSva_3tZnyQdRY9rjzIij8lDd5cA0MfLVWfzaZPI/edit?usp=sharing
