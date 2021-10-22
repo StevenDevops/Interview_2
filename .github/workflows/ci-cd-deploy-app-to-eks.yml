@@ -1,4 +1,4 @@
-name: ci-cd-deploy-app-to-eks
+name: 'ci-cd-deploy-app-to-eks (Deploy App to EKS)'
 
 on:
   workflow_dispatch:

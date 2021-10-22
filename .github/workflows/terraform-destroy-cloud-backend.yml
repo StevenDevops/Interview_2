@@ -1,4 +1,4 @@
-name: 'Terraform Cloud Destroy'
+name: 'Terraform Cloud Destroy (Using for destroy created resources on AWS)'
 
 on:
   workflow_dispatch:

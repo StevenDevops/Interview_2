@@ -1,4 +1,4 @@
-name: 'Terraform Cloud EKS'
+name: 'Terraform Cloud EKS (Using for deploy EKS cluster)'
 
 on:
   workflow_dispatch:
