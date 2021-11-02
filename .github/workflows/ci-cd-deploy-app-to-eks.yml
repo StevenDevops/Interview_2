@@ -35,7 +35,7 @@ jobs:
         env:
           KUBE_CONFIG_DATA: ${{ secrets.AWS_EKS_CONFIG }}
         with:
-          args: apply -f ./k8s/deployment.yml
+          args: delete -f ./k8s/deployment.yml
 
       - name: verify deployment
         uses: kodermax/kubectl-aws-eks@master
